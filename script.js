@@ -4,6 +4,7 @@ const nameInput = document.getElementById("attendeeName");
 const teamSelect = document.getElementById("teamSelect");
 const progressBar = document.getElementById("progressBar");
 const greeting = document.getElementById("greeting");
+const celebrationMessage = document.getElementById("celebrationMessage");
 
 // Track attendance
 let count = 0;
@@ -14,6 +15,12 @@ function showGreeting(message) {
   greeting.textContent = message;
   greeting.classList.add("success-message");
   greeting.style.display = "block";
+}
+
+function showCelebrationMessage(message) {
+  celebrationMessage.textContent = message;
+  celebrationMessage.classList.add("success-message");
+  celebrationMessage.style.display = "block";
 }
 
 function getTopTeam() {
@@ -69,12 +76,14 @@ form.addEventListener("submit", function (event) {
 
   // Show welcome message
   const message = `Welcome, ${name} from ${teamName}!`;
-  if (count === maxCount) {
-    showGreeting(`Celebration! ${getTopTeam()} had the highest turnout at ${count} attendees.`);
-  } else {
-    showGreeting(message);
-  }
+  showGreeting(message);
   console.log(message);
+
+  if (count === maxCount) {
+    const celebration = `Congratulations! ${getTopTeam()} had the highest turnout at ${count} attendees.`;
+    showCelebrationMessage(celebration);
+    console.log(celebration);
+  }
 
   form.reset();
 });
