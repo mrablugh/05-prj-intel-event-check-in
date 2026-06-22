@@ -25,7 +25,8 @@ body {
 
 /* Hero Section */
 .hero {
-  background: linear-gradient(
+  background:
+    linear-gradient(
       135deg,
       rgba(0, 153, 219, 0.9) 0%,
       rgba(0, 104, 181, 0.9) 50%,
@@ -261,6 +262,75 @@ button .fas {
   color: #333;
   margin-bottom: 15px;
   display: none;
+}
+
+#celebrationMessage.celebration-message {
+  position: relative;
+  overflow: hidden;
+  isolation: isolate;
+  text-align: center;
+  color: #7c2d12;
+  background: linear-gradient(135deg, #fff9db 0%, #ffe08a 100%);
+  border: 1px solid #f59e0b;
+  box-shadow: 0 8px 20px rgba(245, 158, 11, 0.2);
+}
+
+#celebrationMessage.celebration-message::before,
+#celebrationMessage.celebration-message::after {
+  content: "";
+  position: absolute;
+  inset: -20% -10%;
+  pointer-events: none;
+  background-repeat: repeat;
+  opacity: 0;
+  animation: confettiFall 1.8s ease-out 1;
+}
+
+#celebrationMessage.celebration-message::before {
+  background-image:
+    radial-gradient(circle, #ef4444 0 4px, transparent 4px),
+    radial-gradient(circle, #22c55e 0 4px, transparent 4px),
+    radial-gradient(circle, #3b82f6 0 4px, transparent 4px),
+    radial-gradient(circle, #f59e0b 0 4px, transparent 4px),
+    radial-gradient(circle, #ec4899 0 4px, transparent 4px);
+  background-size: 40px 40px;
+  background-position:
+    0 0,
+    20px 10px,
+    10px 24px,
+    28px 30px,
+    36px 6px;
+}
+
+#celebrationMessage.celebration-message::after {
+  background-image:
+    radial-gradient(circle, #8b5cf6 0 4px, transparent 4px),
+    radial-gradient(circle, #14b8a6 0 4px, transparent 4px),
+    radial-gradient(circle, #f97316 0 4px, transparent 4px),
+    radial-gradient(circle, #eab308 0 4px, transparent 4px),
+    radial-gradient(circle, #06b6d4 0 4px, transparent 4px);
+  background-size: 48px 48px;
+  background-position:
+    6px 16px,
+    30px 2px,
+    18px 34px,
+    40px 20px,
+    10px 42px;
+  animation-delay: 0.12s;
+}
+
+@keyframes confettiFall {
+  0% {
+    opacity: 0;
+    transform: translateY(-18%) scale(0.98);
+  }
+  20% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(20%) scale(1.02);
+  }
 }
 
 .success-message {

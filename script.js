@@ -20,6 +20,7 @@ function showGreeting(message) {
 function showCelebrationMessage(message) {
   celebrationMessage.textContent = message;
   celebrationMessage.classList.add("success-message");
+  celebrationMessage.classList.add("celebration-message");
   celebrationMessage.style.display = "block";
 }
 
