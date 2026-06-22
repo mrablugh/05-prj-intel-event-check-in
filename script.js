@@ -11,6 +11,9 @@ const storageKeys = {
   water: "waterCount",
   zero: "zeroCount",
   power: "powerCount",
+  waterNames: "waterNames",
+  zeroNames: "zeroNames",
+  powerNames: "powerNames",
 };
 
 // Track attendance
@@ -24,6 +27,12 @@ const teamCounts = {
   power: getSavedCount(storageKeys.power),
 };
 
+const teamNames = {
+  water: getSavedNames(storageKeys.waterNames),
+  zero: getSavedNames(storageKeys.zeroNames),
+  power: getSavedNames(storageKeys.powerNames),
+};
+
 function getSavedCount(key) {
   const savedValue = localStorage.getItem(key);
   const parsedValue = parseInt(savedValue, 10);
@@ -35,11 +44,34 @@ function getSavedCount(key) {
   return parsedValue;
 }
 
+function getSavedNames(key) {
+  const savedValue = localStorage.getItem(key);
+
+  if (!savedValue) {
+    return [];
+  }
+
+  try {
+    const parsedValue = JSON.parse(savedValue);
+
+    if (Array.isArray(parsedValue)) {
+      return parsedValue;
+    }
+  } catch (error) {
+    return [];
+  }
+
+  return [];
+}
+
 function saveCounts() {
   localStorage.setItem(storageKeys.total, String(count));
   localStorage.setItem(storageKeys.water, String(teamCounts.water));
   localStorage.setItem(storageKeys.zero, String(teamCounts.zero));
   localStorage.setItem(storageKeys.power, String(teamCounts.power));
+  localStorage.setItem(storageKeys.waterNames, JSON.stringify(teamNames.water));
+  localStorage.setItem(storageKeys.zeroNames, JSON.stringify(teamNames.zero));
+  localStorage.setItem(storageKeys.powerNames, JSON.stringify(teamNames.power));
 }
 
 function renderCounts() {
@@ -48,8 +80,23 @@ function renderCounts() {
   document.getElementById("zeroCount").textContent = teamCounts.zero;
   document.getElementById("powerCount").textContent = teamCounts.power;
 
+  renderTeamNames("waterNames", teamNames.water);
+  renderTeamNames("zeroNames", teamNames.zero);
+  renderTeamNames("powerNames", teamNames.power);
+
   const progress = Math.min((count / maxCount) * 100, 100);
   progressBar.style.width = `${progress}%`;
+}
+
+function renderTeamNames(listId, names) {
+  const list = document.getElementById(listId);
+  list.innerHTML = "";
+
+  for (let i = 0; i < names.length; i++) {
+    const item = document.createElement("li");
+    item.textContent = names[i];
+    list.appendChild(item);
+  }
 }
 
 renderCounts();
@@ -109,6 +156,7 @@ form.addEventListener("submit", function (event) {
 
   // Update progress bar
   teamCounts[team]++;
+  teamNames[team].push(name);
   renderCounts();
   saveCounts();
   const percentage = progressBar.style.width;
