@@ -6,10 +6,53 @@ const progressBar = document.getElementById("progressBar");
 const greeting = document.getElementById("greeting");
 const celebrationMessage = document.getElementById("celebrationMessage");
 
+const storageKeys = {
+  total: "attendanceTotal",
+  water: "waterCount",
+  zero: "zeroCount",
+  power: "powerCount",
+};
+
 // Track attendance
-let count = 0;
 const maxCount = 50;
 const attendeeCount = document.getElementById("attendeeCount");
+let count = getSavedCount(storageKeys.total);
+
+const teamCounts = {
+  water: getSavedCount(storageKeys.water),
+  zero: getSavedCount(storageKeys.zero),
+  power: getSavedCount(storageKeys.power),
+};
+
+function getSavedCount(key) {
+  const savedValue = localStorage.getItem(key);
+  const parsedValue = parseInt(savedValue, 10);
+
+  if (Number.isNaN(parsedValue)) {
+    return 0;
+  }
+
+  return parsedValue;
+}
+
+function saveCounts() {
+  localStorage.setItem(storageKeys.total, String(count));
+  localStorage.setItem(storageKeys.water, String(teamCounts.water));
+  localStorage.setItem(storageKeys.zero, String(teamCounts.zero));
+  localStorage.setItem(storageKeys.power, String(teamCounts.power));
+}
+
+function renderCounts() {
+  attendeeCount.textContent = count;
+  document.getElementById("waterCount").textContent = teamCounts.water;
+  document.getElementById("zeroCount").textContent = teamCounts.zero;
+  document.getElementById("powerCount").textContent = teamCounts.power;
+
+  const progress = Math.min((count / maxCount) * 100, 100);
+  progressBar.style.width = `${progress}%`;
+}
+
+renderCounts();
 
 function showGreeting(message) {
   greeting.textContent = message;
@@ -63,18 +106,15 @@ form.addEventListener("submit", function (event) {
   // Increment count
   count++;
   console.log("Total check-ins: ", count);
-  attendeeCount.textContent = count;
 
   // Update progress bar
-  const progress = Math.min((count / maxCount) * 100, 100);
-  const percentage = `${progress}%`;
-  progressBar.style.width = percentage;
+  teamCounts[team]++;
+  renderCounts();
+  saveCounts();
+  const percentage = progressBar.style.width;
   console.log(`Progress: ${percentage}`);
 
   // Update team counter
-  const teamCounter = document.getElementById(team + "Count");
-  teamCounter.textContent = parseInt(teamCounter.textContent) + 1;
-
   // Show welcome message
   const message = `Welcome, ${name} from ${teamName}!`;
   showGreeting(message);
